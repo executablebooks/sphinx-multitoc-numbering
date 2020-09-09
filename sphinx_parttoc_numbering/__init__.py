@@ -13,7 +13,11 @@
 
 from docutils import nodes
 from sphinx import addnodes
-from sphinx.util import url_re
+from sphinx.util import url_re, logging
+
+from typing import cast
+
+logger = logging.getLogger(__name__)
 
 __version__ = "0.0.1"
 """sphinx-parttoc-numbering version"""
@@ -22,7 +26,6 @@ def assign_section_numbers(self, env):
     """Assign a section number to each heading under a numbered toctree."""
     # a list of all docnames whose section numbers changed
     rewrite_needed = []
-
     assigned = set()
     old_secnumbers = env.toc_secnumbers
     env.toc_secnumbers = {}
@@ -33,6 +36,8 @@ def assign_section_numbers(self, env):
         # secnumber too, so that it shows up in next/prev/parent rellinks
         for subnode in node.children:
             if isinstance(subnode, nodes.bullet_list):
+
+                ## this is different
                 if len(numstack) == 1:
                     numstack.append(self.last_section_number)
                 else:
@@ -51,6 +56,7 @@ def assign_section_numbers(self, env):
                 titlenode = None
             elif isinstance(subnode, addnodes.compact_paragraph):
                 numstack[-1] += 1
+                reference = cast(nodes.reference, subnode[0])
                 if len(numstack) == 1:
                     number = None  # do not assign number to "Part"
                 else:
@@ -58,7 +64,8 @@ def assign_section_numbers(self, env):
                         self.last_section_number += 1  # increment section number
 
                     if depth > 0:
-                        number = tuple(numstack[1:])  # assign section numbers without part number
+                        number = list(numstack[1:])  # assign section numbers without part number
+                        secnums[reference['anchorname']] = tuple(numstack[1:])
                     else:
                         number = None
                 secnums[subnode[0]['anchorname']] = \
@@ -69,7 +76,7 @@ def assign_section_numbers(self, env):
             elif isinstance(subnode, addnodes.toctree):
                 _walk_toctree(subnode, depth)
 
-    def _walk_toctree(toctreenode, depth):
+    def _walk_toctree(toctreenode: addnodes.toctree, depth: int) -> None:
         if depth == 0:
             return
         for (title, ref) in toctreenode['entries']:
@@ -77,11 +84,12 @@ def assign_section_numbers(self, env):
                 # don't mess with those
                 continue
             elif ref in assigned:
-                env.warn_node('%s is already assigned section numbers '
-                                   '(nested numbered toctree?)' % ref,
-                                   toctreenode, type='toc', subtype='secnum')
+                logger.warning(__('%s is already assigned section numbers '
+                                      '(nested numbered toctree?)'), ref,
+                                   location=toctreenode, type='toc', subtype='secnum')
             elif ref in env.tocs:
-                secnums = env.toc_secnumbers[ref] = {}
+                secnums = {}
+                env.toc_secnumbers[ref] = secnums
                 assigned.add(ref)
                 _walk_toc(env.tocs[ref], secnums, depth,
                           env.titles.get(ref))
