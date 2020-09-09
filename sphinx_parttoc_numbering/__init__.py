@@ -18,14 +18,14 @@ from sphinx.util import url_re
 __version__ = "0.0.1"
 """sphinx-parttoc-numbering version"""
 
-def assign_section_numbers(self):
+def assign_section_numbers(self, env):
     """Assign a section number to each heading under a numbered toctree."""
     # a list of all docnames whose section numbers changed
     rewrite_needed = []
 
     assigned = set()
-    old_secnumbers = self.toc_secnumbers
-    self.toc_secnumbers = self.env.toc_secnumbers = {}
+    old_secnumbers = env.toc_secnumbers
+    env.toc_secnumbers = {}
     self.last_section_number = 0
 
     def _walk_toc(node, secnums, depth, titlenode=None):
@@ -77,20 +77,20 @@ def assign_section_numbers(self):
                 # don't mess with those
                 continue
             elif ref in assigned:
-                self.env.warn_node('%s is already assigned section numbers '
+                env.warn_node('%s is already assigned section numbers '
                                    '(nested numbered toctree?)' % ref,
                                    toctreenode, type='toc', subtype='secnum')
-            elif ref in self.tocs:
-                secnums = self.toc_secnumbers[ref] = {}
+            elif ref in env.tocs:
+                secnums = env.toc_secnumbers[ref] = {}
                 assigned.add(ref)
-                _walk_toc(self.tocs[ref], secnums, depth,
-                          self.env.titles.get(ref))
+                _walk_toc(env.tocs[ref], secnums, depth,
+                          env.titles.get(ref))
                 if secnums != old_secnumbers.get(ref):
                     rewrite_needed.append(ref)
 
-    for docname in self.numbered_toctrees:
+    for docname in env.numbered_toctrees:
         assigned.add(docname)
-        doctree = self.env.get_doctree(docname)
+        doctree = env.get_doctree(docname)
         for toctreenode in doctree.traverse(addnodes.toctree):
             depth = toctreenode.get('numbered', 0)
             if depth:
@@ -101,5 +101,5 @@ def assign_section_numbers(self):
     return rewrite_needed
 
 def setup(app):
-    from sphinx.environment.collectors  .toctree import Toctree
-    Toctree.assign_section_numbers = assign_section_numbers 
+    from sphinx.environment.collectors.toctree import TocTreeCollector
+    TocTreeCollector.assign_section_numbers = assign_section_numbers 
