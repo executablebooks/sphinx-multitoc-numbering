@@ -101,5 +101,5 @@ def assign_section_numbers(self):
     return rewrite_needed
 
 def setup(app):
-    from sphinx.environment.collectors  .toctree import Toctree
+    from sphinx.environment.collectors.toctree import Toctree
     Toctree.assign_section_numbers = assign_section_numbers 
