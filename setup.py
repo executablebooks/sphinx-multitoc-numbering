@@ -12,6 +12,7 @@ setup(
     version=version,
     description="Supporting part in HTML section numbering",
     packages=find_packages(),
+    license="MIT",
     install_requires=[
         "sphinx"
     ]
