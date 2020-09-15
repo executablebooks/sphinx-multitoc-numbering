@@ -2,4 +2,4 @@
 
 ## v0.0.1-alpha
 
-- only sections are getting numbered in correct order
+- Added feature to do continuous numbering of chapters across parts.
