@@ -1,47 +1,42 @@
 # -*- coding: utf-8 -*-
 """
-    part-toctree.py
-    ~~~~~~~~~~~~~~~
-
-    An extension to support "Part" in HTML section numbering.
-    This is made for Sphinx-1.5
-    https://github.com/sphinx-doc/sphinx/issues/3357
-
-    :copyright: Copyright 2007-2016 by the Sphinx team, see AUTHORS.
-    :license: BSD, see LICENSE for details.
+    sphinx_parttoc_numbering
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+    A sphinx extension for continuous numbering of parts, chapters across toctrees.
 """
 
-from docutils import nodes
-from sphinx import addnodes
-from sphinx.util import url_re, logging
-
+from typing import Any, Dict, List
 from typing import cast
 
+from docutils import nodes
+from docutils.nodes import Element
+
+from sphinx import addnodes
+from sphinx.environment import BuildEnvironment
+from sphinx.locale import __
+from sphinx.util import url_re, logging
+ 
 logger = logging.getLogger(__name__)
 
 __version__ = "0.0.1"
 """sphinx-parttoc-numbering version"""
 
-def assign_section_numbers(self, env):
+def assign_section_numbers(self, env: BuildEnvironment) -> List[str]:
     """Assign a section number to each heading under a numbered toctree."""
     # a list of all docnames whose section numbers changed
     rewrite_needed = []
-    assigned = set()
+
+    assigned = set()  # type: Set[str]
     old_secnumbers = env.toc_secnumbers
     env.toc_secnumbers = {}
-    self.last_section_number = 0
+    self.last_chapter_number = 0
 
-    def _walk_toc(node, secnums, depth, titlenode=None):
+    def _walk_toc(node: Element, secnums: Dict, depth: int, titlenode: nodes.title = None) -> None:  # NOQA
         # titlenode is the title of the document, it will get assigned a
         # secnumber too, so that it shows up in next/prev/parent rellinks
         for subnode in node.children:
             if isinstance(subnode, nodes.bullet_list):
-
-                ## this is different
-                if len(numstack) == 1:
-                    numstack.append(self.last_section_number)
-                else:
-                    numstack.append(0)
+                numstack.append(0)
                 _walk_toc(subnode, secnums, depth - 1, titlenode)
                 numstack.pop()
                 titlenode = None
@@ -57,19 +52,17 @@ def assign_section_numbers(self, env):
             elif isinstance(subnode, addnodes.compact_paragraph):
                 numstack[-1] += 1
                 reference = cast(nodes.reference, subnode[0])
+                
+                # if a new chapter is encountered increment the chapter number
                 if len(numstack) == 1:
-                    number = None  # do not assign number to "Part"
+                    self.last_chapter_number += 1
+                if depth > 0:
+                    number = list(numstack)
+                    secnums[reference['anchorname']] = tuple(numstack)
                 else:
-                    if len(numstack) == 2:
-                        self.last_section_number += 1  # increment section number
-
-                    if depth > 0:
-                        number = list(numstack[1:])  # assign section numbers without part number
-                        secnums[reference['anchorname']] = tuple(numstack[1:])
-                    else:
-                        number = None
-                secnums[subnode[0]['anchorname']] = \
-                    subnode[0]['secnumber'] = number
+                    number = None
+                    secnums[reference['anchorname']] = None
+                reference['secnumber'] = number
                 if titlenode:
                     titlenode['secnumber'] = number
                     titlenode = None
@@ -85,14 +78,13 @@ def assign_section_numbers(self, env):
                 continue
             elif ref in assigned:
                 logger.warning(__('%s is already assigned section numbers '
-                                      '(nested numbered toctree?)'), ref,
-                                   location=toctreenode, type='toc', subtype='secnum')
+                                    '(nested numbered toctree?)'), ref,
+                                location=toctreenode, type='toc', subtype='secnum')
             elif ref in env.tocs:
-                secnums = {}
+                secnums = {}  # type: Dict[str, Tuple[int, ...]]
                 env.toc_secnumbers[ref] = secnums
                 assigned.add(ref)
-                _walk_toc(env.tocs[ref], secnums, depth,
-                          env.titles.get(ref))
+                _walk_toc(env.tocs[ref], secnums, depth, env.titles.get(ref))
                 if secnums != old_secnumbers.get(ref):
                     rewrite_needed.append(ref)
 
@@ -102,8 +94,8 @@ def assign_section_numbers(self, env):
         for toctreenode in doctree.traverse(addnodes.toctree):
             depth = toctreenode.get('numbered', 0)
             if depth:
-                # every numbered toctree gets new numbering
-                numstack = [0]
+                # every numbered toctree continues the numbering
+                numstack = [self.last_chapter_number]
                 _walk_toctree(toctreenode, depth)
 
     return rewrite_needed
