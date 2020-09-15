@@ -11,10 +11,7 @@ setup(
     name="sphinx-parttoc-numbering",
     version=version,
     description="Supporting part in HTML section numbering",
-    packages=find_packages('sphinx_parttoc_numbering'),
+    packages=find_packages("sphinx_parttoc_numbering"),
     license="MIT",
-    install_requires=[
-        "sphinx"
-    ]
+    install_requires=["sphinx"],
 )
-
