@@ -5,3 +5,10 @@ build/
 dist/
 *.egg-info/
 _build/
+
+
+# Unit test / coverage reports
+
+.coverage
+coverage.*
+coverage.xml
