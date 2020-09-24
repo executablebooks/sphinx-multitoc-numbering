@@ -1,23 +1,18 @@
 # Sphinx-parttoc-numbering
 
-```{toctree}
-:hidden:
+**An extension for continuous numbering of toctree elements across multiple toctrees**.
 
-contribute
-```
-**An extension for continuos numbering of toctree elements across multiple toctrees**.
-
-This package contains a [Sphinx](http://www.sphinx-doc.org/en/master/) extension to continuously number sections across multiple toctrees present in the same document. Also quite useful in [jupyter-book] projects for continuos numbering of chapters across different parts. 
+This package contains a [Sphinx](http://www.sphinx-doc.org/en/master/) extension to continuously number sections across multiple toctrees present in the same document. Also quite useful in [jupyter-book](https://jupyterbook.org/) projects for continuous numbering of chapters across different parts.
 
 ```{warning}
 sphinx-parttoc-numbering is in an active development stage and may change rapidly.
 ```
 
 (example)=
-## Examples:
+## Demo
 
 (sphinx-example)=
-### Sphinx example
+#### Sphinx example
 
 For the following rst code:
 
@@ -52,7 +47,7 @@ Part2
 ```
 
 (jb-example)=
-### Jupyter-book example
+#### Jupyter-book example
 
 For the following code in `_toc.yml`:
 
@@ -74,17 +69,22 @@ The resultant html numbering will look something like:
 
 
 ```
-Part1
-    1. part1/chapter1 title
-    2. part1/chapter2 title
-Part2
-    3. part2/chapter1 title
+Intro
+
+PART1
+
+1. part1/chapter1 title
+2. part1/chapter2 title
+
+PART2
+
+3. part2/chapter1 title
 ```
 
 (getting-started)=
 ## Getting Started
 
-Since, this repo has not been published to `pypi` yet. To get started with `sphinx-parttoc-numbering`, first clone the Github repo[https://github.com/QuantEcon/sphinx-parttoc-numbering] locally:
+To get started with `sphinx-parttoc-numbering`, first clone the Github [repo](https://github.com/QuantEcon/sphinx-parttoc-numbering) locally:
 
 ```bash
 
@@ -98,7 +98,7 @@ cd sphinx-parttoc-numbering
 python setup.py install
 ```
 
-### Configuration
+#### Configuration
 
 1. Add this extension to the extensions list in your sphinx project's `conf.py`:
 
@@ -106,4 +106,52 @@ python setup.py install
         extensions = ["sphinx_parttoc_numbering"]
     ```
 
-2. Use the `:numbered:` option in toctrees  if using {ref}`sphinx-example` or `numbered:true` if using {ref}`jb-example`,
+2. Use the `:numbered:` option in toctrees  if using {ref}`Sphinx <sphinx-example>` or `numbered:true` if using {ref}`Jupyter Book<jb-example>`,
+
+## Contributing Guide
+
+Thank you for being interested in contributing to the `sphinx-parttoc-numbering`! Highly appreciated ✨.
+
+This page contains information to help you get started with development on this project.
+
+### Development
+
+#### Set-up
+
+Get the source code of this project using git:
+
+```bash
+git clone https://github.com/QuantEcon/sphinx-parttoc-numbering
+cd sphinx-parttoc-numbering
+```
+
+Install all the dependencies of this project, including packages for coding style and testing using:
+
+```
+pip install -e .[code_style,testing]
+```
+
+#### Unit Testing
+
+We use pytest for testing, pytest-regression to regenerate expected outcomes of test and pytest-cov for checking coverage.
+
+To simply run existing tests:
+
+```bash
+pytest
+```
+
+To run tests with coverage and an html coverage report:
+
+```bash
+pytest -v --cov=sphinxcontrib --cov-report=html
+```
+
+#### Coding Style
+
+The consistency and code style in this project is enforced with multiple automated pre-commit hooks. You can install(recommend) and run them using:
+
+```bash
+pre-commit install
+pre-commit run --all
+```
