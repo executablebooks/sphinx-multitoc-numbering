@@ -14,6 +14,7 @@ def rootdir(tmpdir):
     yield roots
     shutil.rmtree(dst)
 
+
 @pytest.fixture
 def warnings():
     def read(app):
