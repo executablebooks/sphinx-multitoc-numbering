@@ -27,7 +27,7 @@ author = "EBP"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx_parttoc_numbering"]
+extensions = ["sphinx_multitoc_numbering"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

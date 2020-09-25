@@ -81,6 +81,11 @@ PART2
 3. part2/chapter1 title
 ```
 
+
+# Inspiration
+
+The development of `sphinx-multitoc-numbering` was mostly inspired from the discussions in this sphinx issue's [thread](https://github.com/sphinx-doc/sphinx/issues/3357).
+
 (getting-started)=
 ## Getting Started
 

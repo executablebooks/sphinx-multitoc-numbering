@@ -1,8 +1,8 @@
 # -- Project information -----------------------------------------------------
 
-project = "sphinx-parttoc-numbering"
-copyright = "2020, QuantEcon Developers"
-author = "QuantEcon Developers"
+project = "sphinx-multitoc-numbering"
+copyright = "2020"
+author = "The Jupyter Book Community"
 master_doc = "index"
 
 
@@ -11,7 +11,7 @@ master_doc = "index"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named "sphinx.ext.*") or your custom
 # ones.
-extensions = ["sphinx_parttoc_numbering", "myst_parser"]
+extensions = ["sphinx_multitoc_numbering", "myst_parser"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
