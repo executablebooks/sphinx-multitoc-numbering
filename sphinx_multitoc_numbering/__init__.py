@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-    sphinx_parttoc_numbering
+    sphinx_multitoc_numbering
     ~~~~~~~~~~~~~~~~~~~~~~~~~~
-    A sphinx extension for continuous numbering of parts, chapters across toctrees.
+    A sphinx extension for continuous numbering of sections across toctrees.
 """
 
 from typing import Dict, List, Set, Tuple
@@ -19,7 +19,7 @@ from sphinx.util import url_re, logging
 logger = logging.getLogger(__name__)
 
 __version__ = "0.0.1"
-"""sphinx-parttoc-numbering version"""
+"""sphinx-multitoc-numbering version"""
 
 
 def assign_section_numbers(self, env: BuildEnvironment) -> List[str]:
