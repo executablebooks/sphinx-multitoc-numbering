@@ -89,11 +89,11 @@ The development of `sphinx-multitoc-numbering` was mostly inspired from the disc
 (getting-started)=
 ## Getting Started
 
-To get started with `sphinx-multitoc-numbering`, first clone the Github [repo](https://github.com/QuantEcon/sphinx-multitoc-numbering) locally:
+To get started with `sphinx-multitoc-numbering`, first clone the Github [repo](https://github.com/executablebooks/sphinx-multitoc-numbering) locally:
 
 ```bash
 
-git clone https://github.com/QuantEcon/sphinx-multitoc-numbering
+git clone https://github.com/executablebooks/sphinx-multitoc-numbering
 ```
 and then install using the setup file
 
@@ -121,12 +121,16 @@ This page contains information to help you get started with development on this 
 
 ### Development
 
+#### Guidelines
+
+For information about development conventions, practices, and infrastructure, please see [the `executablebooks/` development guidelines](https://github.com/executablebooks/.github/blob/master/CONTRIBUTING.md).
+
 #### Set-up
 
 Get the source code of this project using git:
 
 ```bash
-git clone https://github.com/QuantEcon/sphinx-multitoc-numbering
+git clone https://github.com/executablebooks/sphinx-multitoc-numbering
 cd sphinx-multitoc-numbering
 ```
 
