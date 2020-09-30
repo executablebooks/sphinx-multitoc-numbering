@@ -15,7 +15,7 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages("sphinx_multitoc_numbering"),
     license="MIT",
-    install_requires=["sphinx"],
+    install_requires=["sphinx>=3"],
     extras_require={
         "code_style": ["flake8<3.8.0,>=3.7.0", "black", "pre-commit==1.17.0"],
         "testing": [
