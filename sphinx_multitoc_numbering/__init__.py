@@ -105,7 +105,7 @@ def assign_section_numbers(self, env: BuildEnvironment) -> List[str]:
             depth = toctreenode.get("numbered", 0)
             if depth:
                 # every numbered toctree continues the numbering
-                print(self.last_chapter_number)
+                self.last_chapter_number = 0
                 numstack = [self.last_chapter_number]
                 _walk_toctree(toctreenode, depth)
 
