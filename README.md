@@ -26,3 +26,8 @@ extensions = ["sphinx_multitoc_numbering"]
 ## Contributing
 
 We welcome all contributions! See the [EBP Contributing Guide](https://executablebooks.org/en/latest/contributing.html) for general details.
+
+[github-ci]: https://github.com/executablebooks/sphinx-multitoc-numbering/workflows/continuous-integration/badge.svg?branch=master
+[github-link]: https://github.com/executablebooks/sphinx-multitoc-numbering
+[codecov-badge]: https://codecov.io/gh/executablebooks/sphinx-multitoc-numbering/branch/master/graph/badge.svg
+[codecov-link]: https://codecov.io/gh/executablebooks/sphinx-multitoc-numbering
