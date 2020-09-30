@@ -3,7 +3,7 @@
 [![Github-CI][github-ci]][github-link]
 [![Coverage Status][codecov-badge]][codecov-link]
 
-**An extension for continuous numbering of toctree elements across multiple toctrees**.
+**A Sphinx extension to support continuous numbering of sections across multiple tocs in HTML output**.
 
 This package contains a [Sphinx](http://www.sphinx-doc.org/en/master/) extension to continuously number sections across multiple toctrees present in the same document. Also quite useful in [jupyter-book](https://jupyterbook.org/) projects for continuous numbering of chapters across different parts.
 

@@ -13,7 +13,7 @@ setup(
     description="Supporting continuous HTML section numbering",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    packages=find_packages("sphinx_multitoc_numbering"),
+    packages=find_packages(),
     license="MIT",
     install_requires=["sphinx>=3"],
     extras_require={
