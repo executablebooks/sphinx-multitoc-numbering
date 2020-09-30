@@ -18,7 +18,7 @@ from sphinx.util import url_re, logging
 
 logger = logging.getLogger(__name__)
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 """sphinx-multitoc-numbering version"""
 
 

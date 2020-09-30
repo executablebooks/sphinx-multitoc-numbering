@@ -1,4 +1,4 @@
-# sphinx-parttoc-numbering
+# sphinx-multitoc-numbering
 
 [![Github-CI][github-ci]][github-link]
 [![Coverage Status][codecov-badge]][codecov-link]
