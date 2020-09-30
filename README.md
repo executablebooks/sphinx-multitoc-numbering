@@ -1,5 +1,6 @@
 # sphinx-multitoc-numbering
 
+[![Documentation Status][rtd-badge]][rtd-link]
 [![Github-CI][github-ci]][github-link]
 [![Coverage Status][codecov-badge]][codecov-link]
 
@@ -23,10 +24,16 @@ extensions = ["sphinx_multitoc_numbering"]
 ...
 ```
 
+## Documentation
+
+See the [sphinx-multitoc-numbering documentation](https://sphinx-multitoc-numbering.readthedocs.io/en/latest/) for more information.
+
 ## Contributing
 
 We welcome all contributions! See the [EBP Contributing Guide](https://executablebooks.org/en/latest/contributing.html) for general details.
 
+[rtd-badge]: https://readthedocs.org/projects/sphinx-multitoc-numbering/badge/?version=latest
+[rtd-link]: https://sphinx-multitoc-numbering.readthedocs.io/en/latest/?badge=latest
 [github-ci]: https://github.com/executablebooks/sphinx-multitoc-numbering/workflows/continuous-integration/badge.svg?branch=master
 [github-link]: https://github.com/executablebooks/sphinx-multitoc-numbering
 [codecov-badge]: https://codecov.io/gh/executablebooks/sphinx-multitoc-numbering/branch/master/graph/badge.svg
