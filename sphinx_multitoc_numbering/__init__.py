@@ -18,7 +18,7 @@ from sphinx.util import url_re, logging
 
 logger = logging.getLogger(__name__)
 
-__version__ = "0.0.1"
+__version__ = "0.0.4"
 """sphinx-multitoc-numbering version"""
 
 
@@ -30,7 +30,6 @@ def assign_section_numbers(self, env: BuildEnvironment) -> List[str]:
     assigned = set()  # type: Set[str]
     old_secnumbers = env.toc_secnumbers
     env.toc_secnumbers = {}
-    self.last_chapter_number = 0
 
     def _walk_toc(
         node: Element, secnums: Dict, depth: int, titlenode: nodes.title = None
@@ -57,8 +56,6 @@ def assign_section_numbers(self, env: BuildEnvironment) -> List[str]:
                 reference = cast(nodes.reference, subnode[0])
 
                 # if a new chapter is encountered increment the chapter number
-                if len(numstack) == 1:
-                    self.last_chapter_number += 1
                 if depth > 0:
                     number = list(numstack)
                     secnums[reference["anchorname"]] = tuple(numstack)
@@ -105,7 +102,6 @@ def assign_section_numbers(self, env: BuildEnvironment) -> List[str]:
             depth = toctreenode.get("numbered", 0)
             if depth:
                 # every numbered toctree continues the numbering
-                self.last_chapter_number = 0
                 numstack = [0]
                 _walk_toctree(toctreenode, depth)
 
