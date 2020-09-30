@@ -25,5 +25,10 @@ setup(
             "pytest-regressions",
             "jupyter-book",
         ],
+        "rtd": [
+            "sphinx>=3.0",
+            "sphinx-book-theme",
+            "myst-parser",
+        ],
     },
 )
