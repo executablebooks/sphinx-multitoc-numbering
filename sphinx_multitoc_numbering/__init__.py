@@ -98,7 +98,13 @@ def assign_section_numbers(self, env: BuildEnvironment) -> List[str]:
                 if secnums != old_secnumbers.get(ref):
                     rewrite_needed.append(ref)
 
-    for docname in env.numbered_toctrees:
+    # rearrange it to respect ordering in toctree directives
+    rearranged_numbered_toctrees = []
+    for toc in env.tocs:
+        if toc in env.numbered_toctrees:
+            rearranged_numbered_toctrees.append(toc)
+
+    for docname in rearranged_numbered_toctrees:
         assigned.add(docname)
         doctree = env.get_doctree(docname)
         for toctreenode in doctree.traverse(addnodes.toctree):

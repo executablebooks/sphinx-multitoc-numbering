@@ -44,3 +44,18 @@ def test_mixed(app, file_regression):
     assert "2. Chapter 2" in str(toctree_wrapper)
     assert ">Part 2" in str(toctree_wrapper)
     assert ">Chapter 3" in str(toctree_wrapper)
+
+
+@pytest.mark.sphinx("html", testroot="nested-toctree")
+def test_nested(app, file_regression):
+    app.build()
+    outfile = app.outdir / "index.html"
+
+    # get content markup
+    soup = bs(outfile.read_text(encoding="utf8"), "html.parser")
+    toctree_wrapper = soup.findAll("div", {"class": "toctree-wrapper"})[0]
+    file_regression.check(toctree_wrapper.prettify(), extension=".html")
+    assert "1. Chapter 1" in str(toctree_wrapper)
+    assert "2. Chapter 2" in str(toctree_wrapper)
+    assert "3. Chapter 3" in str(toctree_wrapper)
+    assert "4. Chapter 4" in str(toctree_wrapper)
