@@ -2,7 +2,7 @@
 
 **An extension for continuous numbering of toctree elements across multiple toctrees**.
 
-This package contains a [Sphinx](http://www.sphinx-doc.org/en/master/) extension to continuously number sections across multiple toctrees present in the same document. Also quite useful in [jupyter-book](https://jupyterbook.org/) projects for continuous numbering of chapters across different parts.
+This package contains a [Sphinx](http://www.sphinx-doc.org/en/master/) extension to continuously number sections across multiple toctrees. Also quite useful in [jupyter-book](https://jupyterbook.org/) projects for continuous numbering of chapters across different parts.
 
 ```{warning}
 sphinx-multitoc-numbering is in an active development stage and may change rapidly.
