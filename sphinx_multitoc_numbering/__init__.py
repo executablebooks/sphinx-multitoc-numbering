@@ -22,6 +22,12 @@ __version__ = "0.1.2"
 """sphinx-multitoc-numbering version"""
 
 
+def build_init_handler(app):
+    from sphinx.util.console import bold
+
+    logger.info(bold("sphinx-multitoc-numbering v%s:") + " Loaded", __version__)
+
+
 def assign_section_numbers(self, env: BuildEnvironment) -> List[str]:
     """Assign a section number to each heading under a numbered toctree."""
     # a list of all docnames whose section numbers changed
@@ -120,4 +126,5 @@ def assign_section_numbers(self, env: BuildEnvironment) -> List[str]:
 def setup(app):
     from sphinx.environment.collectors.toctree import TocTreeCollector
 
+    app.connect("builder-inited", build_init_handler)
     TocTreeCollector.assign_section_numbers = assign_section_numbers
