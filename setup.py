@@ -31,4 +31,5 @@ setup(
             "myst-parser",
         ],
     },
+    include_package_data=True,
 )
