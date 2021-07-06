@@ -5,7 +5,7 @@
     A sphinx extension for continuous numbering of sections across toctrees.
 """
 
-from typing import Dict, List, Set, Tuple
+from typing import Dict, Iterable, List, Set, Tuple
 from typing import cast
 
 from docutils import nodes
@@ -27,16 +27,66 @@ def build_init_handler(app):
 
     logger.info(bold("sphinx-multitoc-numbering v%s:") + " Loaded", __version__)
 
+    
+def find_numbered_toctree_nodes(
+    env, iterable: Iterable[addnodes.toctree]
+) -> Tuple[Set[str], List[addnodes.toctree]]:
+    """Recursively walk the toctree, recording docnames and numbered nodes"""
+    toctree_nodes = []
+    assigned = set([])
+    for node in iterable:
+        if node["numbered"]:
+            toctree_nodes.append(node)
+        else:
+            for _, ref in node["entries"]:
+                assigned.add(ref)
+                doctree = env.get_doctree(ref)
+                inner_toctree_nodes = doctree.traverse(addnodes.toctree)
+                # RECURSION
+                # Base case: All nodes in inner_toctree_nodes are numbered,
+                #            or inner_toctree_nodes is empty
+                # This'll happen eventually as long as the toctree is acyclic,
+                # as we are guaranteed to get a level deeper with every call.
+                # Sphinx already requires an acyclic toctree, so we're fine.
+                inner_assigned, inner_toctree_nodes = find_numbered_toctree_nodes(
+                    env, inner_toctree_nodes
+                )
+                assigned.update(inner_assigned)
+                toctree_nodes.extend(inner_toctree_nodes)
+    return assigned, toctree_nodes
+
+
+def get_toctree_nodes(env: BuildEnvironment) -> Tuple[Set[str], List[addnodes.toctree]]:
+    """Get all numbered toctrees, in the order they appear in the document
+
+    Walks the entire toctree, starting with the index, and records numbered
+    toctrees as it finds them."""
+    ## Get the toctrees in the correct order
+    # Sphinx toctrees always start at index
+    index_doctree = env.get_doctree("index")
+    index_toctree_nodes = index_doctree.traverse(addnodes.toctree)
+
+    assigned, toctree_nodes = find_numbered_toctree_nodes(env, index_toctree_nodes)
+    assigned.add("index")
+
+    if assigned != env.numbered_toctrees:
+        logger.warning(
+            "Couldn't number some toctrees: {env.numbered_toctrees - assigned}",
+            type="toc",
+        )
+    return assigned, toctree_nodes
+
 
 def assign_section_numbers(self, env: BuildEnvironment) -> List[str]:
     """Assign a section number to each heading under a numbered toctree."""
     # a list of all docnames whose section numbers changed
     rewrite_needed = []
 
-    assigned = set()  # type: Set[str]
     old_secnumbers = env.toc_secnumbers
     env.toc_secnumbers = {}
     self.last_chapter_number = 0
+
+    assigned, toctree_nodes = get_toctree_nodes(env)
 
     def _walk_toc(
         node: Element, secnums: Dict, depth: int, titlenode: nodes.title = None
@@ -81,7 +131,7 @@ def assign_section_numbers(self, env: BuildEnvironment) -> List[str]:
     def _walk_toctree(toctreenode: addnodes.toctree, depth: int) -> None:
         if depth == 0:
             return
-        for (title, ref) in toctreenode["entries"]:
+        for _, ref in toctreenode["entries"]:
             if url_re.match(ref) or ref == "self":
                 # don't mess with those
                 continue
@@ -104,21 +154,12 @@ def assign_section_numbers(self, env: BuildEnvironment) -> List[str]:
                 if secnums != old_secnumbers.get(ref):
                     rewrite_needed.append(ref)
 
-    # rearrange it to respect ordering in toctree directives
-    rearranged_numbered_toctrees = []
-    for toc in env.tocs:
-        if toc in env.numbered_toctrees:
-            rearranged_numbered_toctrees.append(toc)
-
-    for docname in rearranged_numbered_toctrees:
-        assigned.add(docname)
-        doctree = env.get_doctree(docname)
-        for toctreenode in doctree.traverse(addnodes.toctree):
-            depth = toctreenode.get("numbered", 0)
-            if depth:
-                # every numbered toctree continues the numbering
-                numstack = [self.last_chapter_number]
-                _walk_toctree(toctreenode, depth)
+    for toctreenode in toctree_nodes:
+        depth = toctreenode.get("numbered", 0)
+        if depth:
+            # every numbered toctree continues the numbering
+            numstack = [self.last_chapter_number]
+            _walk_toctree(toctreenode, depth)
 
     return rewrite_needed
 
